@@ -40,9 +40,16 @@ class Bip32Keys:
         sk = SigningKey.from_string(string=decode_hex(private_key)[0], curve=ecdsa.SECP256k1, hashfunc=sha256)
         vk = sk.get_verifying_key()
 
+        y_hex = encode_hex(vk.to_string()[32:64])[0].decode()
+        if int(y_hex, 16) & 1:
+            prefix = b'\x03'
+        else:
+            prefix = b'\x02'
+
+
         self.private_key = sk.to_string()
-        self.public_key = b'\x02' + vk.to_string()[0:32]  # '\x02' - compressed public key
-        self.uncompressed_public_key = vk.to_string()
+        self.public_key = prefix + vk.to_string()[0:32]  # '\x02' - compressed public key
+        self.uncompressed_public_key = b'\x04' + vk.to_string()
 
     def get_public_key(self):
         return encode_hex(self.public_key)[0].decode()
