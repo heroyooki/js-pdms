@@ -20,6 +20,10 @@ class Qtum(Bip32Addresses):
         else:
             return '78'
 
+    @staticmethod
+    def is_valid_qtum_address(address, mainnet=True):
+        return Qtum.is_valid_address(address) and int(Qtum._get_magic_byte(mainnet), 16) == Qtum.get_magic_byte(address)
+
 
 def test_address():
     q = Qtum("89324890413289043287943127894312789431241324132431243", mainnet=False)

@@ -52,6 +52,26 @@ class Bip32Addresses(Bip32NetworkKeys):
 
         return output[2:-8].decode()  # drop magic byte and checksum
 
+    @staticmethod
+    def is_valid_address(address):
+        output = base58check.b58decode(address)
+        output = encode_hex(output)[0].decode()
+
+        checksum = output[-8:]
+        extended_ripemd160 = output[:-8]
+
+        output = decode_hex(extended_ripemd160)[0]
+        output = sha256(sha256(output).digest()).hexdigest()[0:8]
+
+        return checksum == output
+
+    @staticmethod
+    def get_magic_byte(address):
+        output = base58check.b58decode(address)
+        output = encode_hex(output)[0].decode()
+
+        return int(output[0:2], 16)
+
 
 if __name__ == '__main__':
     keys = Bip32Addresses({'wif': 'cRgfyoXvYq8wrF6DbuFLnbRQ7RixZrmRCwzaiiPRRD8kw3qxwqxi'}, mainnet=False, magic_byte='78')

@@ -137,6 +137,21 @@ class TestUM(unittest.TestCase):
         self.assertEqual(q.get_wif(), wif)
         self.assertEqual(q.get_private_key(), private_key)
 
+    def test_valid_address(self):
+        wif = 'cQZmGLJZAMpNY36YFKbH6gygW2eBDULpokkeTYdPg41fo4BqycEc'
+        q = Qtum({'wif': wif}, mainnet=False)
+
+        self.assertTrue(Qtum.is_valid_address(q.get_qtum_address()))
+
+    def test_valid_predefined_address(self):
+        self.assertTrue(Qtum.is_valid_address('qZiXFyqVf9vxf6iu47AdfU1FVaHyULUP7e'))
+
+    def test_invalid_address(self):
+        self.assertFalse(Qtum.is_valid_address('qAiXFyqVf9vxf6iu47AdfU1FVaHyULUP7e'))
+
+    def test_valid_qtum_address(self):
+        self.assertTrue(Qtum.is_valid_qtum_address('qZiXFyqVf9vxf6iu47AdfU1FVaHyULUP7e', mainnet=False))
+
 
 if __name__ == '__main__':
     unittest.main()
