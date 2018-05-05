@@ -4,6 +4,7 @@ from hashlib import sha256
 import hashlib
 import base58check
 
+
 class Bip32Addresses(Bip32NetworkKeys):
 
     def __init__(self, init_params, magic_byte, mainnet=True):

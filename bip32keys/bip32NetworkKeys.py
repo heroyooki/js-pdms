@@ -48,9 +48,9 @@ class Bip32NetworkKeys(Bip32Keys):
             return mb + private_key + '01'  # \x01 - compressed wif
         elif len(private_key) == 66:
             if private_key[0:2] == mb:
-                return mb + private_key
-            elif private_key[-2:] == '01':
                 return private_key + '01'
+            elif private_key[-2:] == '01':
+                return mb + private_key
         elif len(private_key) == 68:
             return private_key
         else:
@@ -71,3 +71,4 @@ if __name__ == '__main__':
     print('private key: ', keys.get_private_key())
     print('uncompressed public key: ', keys.get_uncompressed_public_key())
     print('wif: ', keys.get_wif())
+    print('private key to wif: ', Bip32NetworkKeys.private_key_to_wif('7a6be1df9cc5d88edce5443ef0fce246123295dd82afae9a57986543272157cc', mainnet=False))
