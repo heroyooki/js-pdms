@@ -15,13 +15,15 @@ encode_hex = codecs.getencoder("hex_codec")
 class Bip32Keys:
 
     def __init__(self, init_params):
-
-        if 'entropy' in init_params:
-            self.init_from_entropy(init_params['entropy'])
-        elif 'private_key' in init_params:
-            self.init_from_private_key(init_params['private_key'])
-        else:
-            raise NotImplementedError()
+        if isinstance(init_params, str):
+            self.init_from_entropy(init_params)
+        elif isinstance(init_params, dict):
+            if 'entropy' in init_params:
+                self.init_from_entropy(init_params['entropy'])
+            elif 'private_key' in init_params:
+                self.init_from_private_key(init_params['private_key'])
+            else:
+                raise NotImplementedError()
 
 
     def init_from_entropy(self, entropy):
@@ -40,15 +42,8 @@ class Bip32Keys:
         sk = SigningKey.from_string(string=decode_hex(private_key)[0], curve=ecdsa.SECP256k1, hashfunc=sha256)
         vk = sk.get_verifying_key()
 
-        y_hex = encode_hex(vk.to_string()[32:64])[0].decode()
-        if int(y_hex, 16) & 1:
-            prefix = b'\x03'
-        else:
-            prefix = b'\x02'
-
-
         self.private_key = sk.to_string()
-        self.public_key = prefix + vk.to_string()[0:32]  # '\x02' - compressed public key
+        self.public_key = decode_hex(Bip32Keys.to_compressed_public_key(encode_hex(vk.to_string())[0].decode()))[0]
         self.uncompressed_public_key = b'\x04' + vk.to_string()
 
     def get_public_key(self):
@@ -89,10 +84,19 @@ class Bip32Keys:
 
     @staticmethod
     def to_compressed_public_key(public_key):
+        if len(public_key) == 66:
+            return public_key
+
+        y_hex = public_key[64:]
+        if int(y_hex, 16) & 1:
+            prefix = '03'
+        else:
+            prefix = '02'
+
         if len(public_key) == 130:
-            return public_key[2:66]
+            return prefix + public_key[2:66]
         elif len(public_key) == 128:
-            return public_key[:64]
+            return prefix + public_key[:64]
 
     @staticmethod
     def sign_message(message, private_key):
@@ -153,11 +157,13 @@ class Bip32Keys:
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     keys = Bip32Keys({'private_key': '7a6be1df9cc5d88edce5443ef0fce246123295dd82afae9a57986543272157cc'})
-    keys = Bip32Keys({'entropy': 'fdsafdasfadsfdsfsdafadsfadsfdsafafdsa'})
+    keys = Bip32Keys({'entropy': '3123213213213123312c3kjifj3'})
     print('public key: ', keys.get_public_key())
     print('private key: ', keys.get_private_key())
     print('uncompressed public key: ', keys.get_uncompressed_public_key())
     sig = keys.sign_msg('hello world')
     print('signature: ', sig)
     print('verify signature: ', keys.verify_msg('hello world', sig))
+
+    print('compressed: ', Bip32Keys.to_compressed_public_key('041ad7138370ef5e93fb243aff3373e2b92383818dfc20022841b655e0cd6c618cd578261c78e1adfe205c3ade8b81e1722d6058be9155eee55468fbb04b62040e'))
 
