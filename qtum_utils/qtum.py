@@ -10,8 +10,15 @@ class Qtum(Bip32Addresses):
         return super().get_blockchain_address()
 
     @staticmethod
-    def hex_to_qtum_address(hex_address, mainnet):
+    def hex_to_qtum_address(hex_address, mainnet=True):
         return Bip32Addresses.hex_address_to_blockchain_address(hex_address, Qtum._get_magic_byte(mainnet))
+
+    @staticmethod
+    def public_key_to_qtum_address(public_key, mainnet=True):
+        hex_address = Bip32Addresses.public_key_to_hex_address(public_key)
+        qtum_address = Bip32Addresses.hex_address_to_blockchain_address(hex_address, Qtum._get_magic_byte(mainnet))
+
+        return qtum_address
 
     @staticmethod
     def _get_magic_byte(mainnet):
@@ -33,6 +40,7 @@ def test_address():
     print('uncompressed public key: ' + q.get_uncompressed_public_key())
     print('qtum address: ' + q.get_qtum_address())
     print('qtum hex address: ' + q.get_hex_address())
+    print('pub_key to qtum address: ', Qtum.public_key_to_qtum_address('0356fd892d76117935853466db2bf0ac5d0eb9138bfa78c3b25d68f1b64f9a5106', mainnet=False))
 
 
 def test_signature():
