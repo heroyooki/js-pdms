@@ -4,12 +4,6 @@ This utilities used for generating public / private keys / blockchain address an
 
 ## Installation
 
-Clone sources from git:
-
-```bash
-git clone https://bitbucket.org/robin8_put/bip32keys.git
-```
-
 Create virtualenv and install needed libraries from the `requirements.txt`:
 
 ```bash
@@ -54,3 +48,10 @@ pip3 install -r requirements.txt
     - `hex_to_qtum_address` --- convert hex to qtum address
     - `public_key_to_qtum_address` --- convert public key to qtum address
     - `is_valid_qtum_address` --- check is qtum address valid
+- `js_client` --- JavaScript library for working with QTUM (https://qtum.org/en/)
+    - `base58` --- parameter alpha is alphabet(currenctly igrone, pass empty string), return encode and decode functions of base58check
+    - `privateKeyToWif` - convert private key to wif format
+    - `deriveQtumAddress` - get Qtum address from public key
+    - `doGenerate` --- generate public, private keys. Should be run in the start!!!
+    - `doSign` --- sign message
+    - `doVerify` --- verify message
