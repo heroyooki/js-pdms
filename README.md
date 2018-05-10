@@ -1,19 +1,6 @@
-# Robin8 BlockChain bip32keys
+# bip32keys module
 
 This utilities used for generating public / private keys / blockchain address and sign / verify messages.
-
-## Installation
-
-Create virtualenv and install needed libraries from the `requirements.txt`:
-
-```bash
-cd libs
-virtualenv --python=python3.6 venv
-source venv/bin/activate
-pip3 install -r requirements.txt
-```
-
-## Description
 
 - `bip32keys` --- library for generating public / private keys / blockchain address
     - `bip32keys` --- contain `Bip32Keys` class which allows generate public / private keys and sign / verify messages
@@ -55,3 +42,14 @@ pip3 install -r requirements.txt
     - `doGenerate` --- generate public, private keys. Should be run in the start!!!
     - `doSign` --- sign message
     - `doVerify` --- verify message
+
+## Installation
+
+Create virtualenv and install needed libraries from the `requirements.txt`:
+
+```bash
+cd libs
+virtualenv --python=python3.6 venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
