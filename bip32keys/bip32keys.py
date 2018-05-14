@@ -61,6 +61,10 @@ class Bip32Keys:
 
     @staticmethod
     def to_uncompressed_public_key(public_key):
+        if len(public_key) == 130:
+            return public_key
+        elif len(public_key) == 128:
+            return '04' + public_key
         p_hex = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F'
         p = int(p_hex, 16)
 
